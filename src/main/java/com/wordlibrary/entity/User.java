@@ -1,6 +1,7 @@
 package com.wordlibrary.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,15 @@ public class User {
     private long id;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Email is required")
     private String email;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Username is required")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "Password is required")
     private String password;
 
     @Column(columnDefinition = "integer default 0")

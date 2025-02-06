@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> {
-    List<Word> findBySetId(Long setId);
+    List<Word> findByWordSetId(Long setId);
 }
