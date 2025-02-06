@@ -18,9 +18,7 @@ public class WordService {
         return wordRepository.findAll();
     }
 
-    public List<Word> getWordsBySetId(Long setId) {
-        return wordRepository.findByWordSetId(setId);
-    }
+    public List<Word> getWordsBySetId(Long setId){return wordRepository.findBySetId(setId);}
 
     public Optional<Word> getWordById(Long id) {
         return wordRepository.findById(id);
