@@ -1,9 +1,8 @@
 package com.wordlibrary.controller;
 
 import com.wordlibrary.entity.User;
-import com.wordlibrary.service.UserService;
+import com.wordlibrary.service.implementations.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

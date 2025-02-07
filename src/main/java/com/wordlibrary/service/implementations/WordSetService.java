@@ -1,4 +1,4 @@
-package com.wordlibrary.service;
+package com.wordlibrary.service.implementations;
 
 import com.wordlibrary.entity.User;
 import com.wordlibrary.entity.WordSet;
