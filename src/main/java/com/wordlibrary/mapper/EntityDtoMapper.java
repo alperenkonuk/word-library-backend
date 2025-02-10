@@ -6,9 +6,11 @@ import com.wordlibrary.dto.WordSetDto;
 import com.wordlibrary.entity.User;
 import com.wordlibrary.entity.Word;
 import com.wordlibrary.entity.WordSet;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class EntityDtoMapper {
 
     public UserDto mapUserToDtoBasic(User user) {
@@ -26,19 +28,42 @@ public class EntityDtoMapper {
         wordDto.setId(word.getId());
         wordDto.setWord(word.getWord());
         wordDto.setDefinition(word.getDefinition());
+        wordDto.setSetId(word.getWordSet().getId());
 
         return wordDto;
+    }
+
+    public Word mapDtoToWord(WordDto wordDto, WordSet wordSet) {
+        Word word = new Word();
+
+        word.setWord(wordDto.getWord());
+        word.setDefinition(wordDto.getDefinition());
+        word.setWordSet(wordSet);
+
+        return word;
     }
 
     public WordSetDto mapWordSetToDtoBasic(WordSet wordSet) {
         WordSetDto wordSetDto = new WordSetDto();
         wordSetDto.setId(wordSet.getId());
         wordSetDto.setName(wordSet.getName());
+        wordSetDto.setLanguage(wordSet.getLanguage());
 
         return wordSetDto;
     }
 
-    public WordSetDto mapWordSetToDtoPlusWord(WordSet wordSet) {
+    public WordSet mapDtoToWordSet(WordSetDto wordSetDto, User user) {
+        WordSet wordSet = new WordSet();
+
+        wordSet.setName(wordSetDto.getName());
+        wordSet.setIsPublic(wordSetDto.getIsPublic());
+        wordSet.setLanguage(wordSetDto.getLanguage());
+        wordSet.setUser(user);
+
+        return wordSet;
+    }
+
+    public WordSetDto mapWordSetToDtoPlusWords(WordSet wordSet) {
         WordSetDto wordSetDto = mapWordSetToDtoBasic(wordSet);
 
         if (wordSet.getWords() != null) {
@@ -48,10 +73,11 @@ public class EntityDtoMapper {
                     .toList();
             wordSetDto.setWords(wordDtos);
         }
+
         return wordSetDto;
     }
 
-    public UserDto mapUserToDtoPlusWordSet(User user) {
+    public UserDto mapUserToDtoPlusWordSets(User user) {
         UserDto userDto = mapUserToDtoBasic(user);
 
         if (user.getWordSets() != null) {

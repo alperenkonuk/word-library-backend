@@ -16,7 +16,6 @@ public class WordDto {
     private Long id;
     private String word;
     private String definition;
-    private String language;
-    private WordSetDto wordSet;
+    private Long setId;
 }
 

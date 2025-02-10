@@ -3,12 +3,14 @@ package com.wordlibrary.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Table(name = "words")
 public class Word {
@@ -21,9 +23,6 @@ public class Word {
 
     @NotBlank(message = "Definition is required")
     private String definition;
-
-    @Column(nullable = true)
-    private String language;
 
     @ManyToOne
     @JoinColumn(name = "set_id", nullable = false)

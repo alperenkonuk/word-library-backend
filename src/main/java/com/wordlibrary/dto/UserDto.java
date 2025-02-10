@@ -19,5 +19,6 @@ public class UserDto {
     private String email;
     private String username;
     private int streak;
+    private String password;
     private List<WordSetDto> wordSets;
 }

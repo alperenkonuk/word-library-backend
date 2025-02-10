@@ -3,6 +3,7 @@ package com.wordlibrary.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
+@Builder
 @AllArgsConstructor
 @Table(name = "word_sets")
 public class WordSet {
@@ -24,7 +26,10 @@ public class WordSet {
     private String name;
 
     @Column
-    private Boolean _public;
+    private Boolean isPublic;
+
+    @Column(nullable = true)
+    private String language;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
