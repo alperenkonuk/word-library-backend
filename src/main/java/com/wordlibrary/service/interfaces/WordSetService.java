@@ -14,5 +14,7 @@ public interface WordSetService {
 
     Response getWordSetsByUser();
 
+    Response getPublicWordSets();
+
     Response shuffleWords(Long id);
 }

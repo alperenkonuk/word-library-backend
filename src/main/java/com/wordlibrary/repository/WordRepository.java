@@ -14,4 +14,10 @@ public interface WordRepository extends JpaRepository<Word, Long> {
 
     @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY RANDOM()", nativeQuery = true)
     List<Word> findByWordSetIdOrderByRandom(@Param("setId") Long setId);
+
+    @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY word ASC", nativeQuery = true)
+    List<Word> findByWordSetIdOrderAlphabeticalAsc(@Param("setId") Long setId);
+
+    @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY word DESC", nativeQuery = true)
+    List<Word> findByWordSetIdOrderAlphabeticalDesc(@Param("setId") Long setId);
 }

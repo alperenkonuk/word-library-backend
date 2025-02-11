@@ -101,6 +101,20 @@ public class WordSetServiceImpl implements WordSetService {
     }
 
     @Override
+    public Response getPublicWordSets() {
+        List<WordSetDto> wordSetList = wordSetRepository.getWordSetsPublic()
+                .stream()
+                .map(entityDtoMapper::mapWordSetToDtoBasic)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .message("Public wordsets transmitted successfully")
+                .wordSetList(wordSetList)
+                .build();
+    }
+
+    @Override
     public Response shuffleWords(Long setId) {
         List<WordDto> shuffledWordList = wordRepository.findByWordSetIdOrderByRandom(setId)
                 .stream()

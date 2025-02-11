@@ -39,4 +39,9 @@ public class WordSetController {
     public ResponseEntity<Response> getUserWordSets() {
         return ResponseEntity.ok(wordSetService.getWordSetsByUser());
     }
+
+    @GetMapping("/public")
+    public ResponseEntity<Response> getPublicWordSets() {
+        return ResponseEntity.ok(wordSetService.getPublicWordSets());
+    }
 }
