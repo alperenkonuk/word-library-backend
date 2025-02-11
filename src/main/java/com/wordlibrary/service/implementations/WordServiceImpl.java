@@ -12,6 +12,8 @@ import com.wordlibrary.service.interfaces.WordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WordServiceImpl implements WordService {
@@ -21,8 +23,8 @@ public class WordServiceImpl implements WordService {
     private final EntityDtoMapper entityDtoMapper;
 
     @Override
-    public Response addWord(WordDto wordDto) {
-        WordSet wordSet = wordSetRepository.findById(wordDto.getSetId())
+    public Response addWord(WordDto wordDto, Long setId) {
+        WordSet wordSet = wordSetRepository.findById(setId)
                 .orElseThrow(() -> new NotFoundException("Word set not found"));
 
         Word word = entityDtoMapper.mapDtoToWord(wordDto, wordSet);
@@ -38,7 +40,7 @@ public class WordServiceImpl implements WordService {
 
 
     @Override
-    public Response updateWord(WordDto wordDto) {
+    public Response updateWord(WordDto wordDto, Long wordId) {
         Word word = wordRepository.findById(wordDto.getId())
                 .orElseThrow(() -> new NotFoundException("Word not found"));
 
@@ -63,6 +65,19 @@ public class WordServiceImpl implements WordService {
                 .status(200)
                 .message("Word transmitted successfully")
                 .word(entityDtoMapper.mapWordToDtoBasic(word))
+                .build();
+    }
+
+    @Override
+    public Response getWordsBySetId(Long setId) {
+        List<WordDto> wordList = wordRepository.findByWordSetId(setId)
+                .stream()
+                .map(entityDtoMapper::mapWordToDtoBasic)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .wordList(wordList)
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.wordlibrary.service.implementations;
 
 import com.wordlibrary.dto.Response;
+import com.wordlibrary.dto.WordDto;
 import com.wordlibrary.dto.WordSetDto;
 import com.wordlibrary.entity.User;
 import com.wordlibrary.entity.Word;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -60,8 +60,8 @@ public class WordSetServiceImpl implements WordSetService {
         WordSet wordSet = wordSetRepository.findById(wordSetDto.getId())
                 .orElseThrow(() -> new NotFoundException("Word not found"));
 
-        if(wordSetDto.getName() != null) wordSet.setName(wordSetDto.getName());
-        if(wordSetDto.getIsPublic() != null) wordSet.setIsPublic(wordSetDto.getIsPublic());
+        if (wordSetDto.getName() != null) wordSet.setName(wordSetDto.getName());
+        if (wordSetDto.getIsPublic() != null) wordSet.setIsPublic(wordSetDto.getIsPublic());
 
         WordSet updatedWordSet = wordSetRepository.save(wordSet);
 
@@ -97,6 +97,20 @@ public class WordSetServiceImpl implements WordSetService {
                 .status(200)
                 .message("WordSets transmitted successfully")
                 .wordSetList(wordSetDtoList)
+                .build();
+    }
+
+    @Override
+    public Response shuffleWords(Long setId) {
+        List<WordDto> shuffledWordList = wordRepository.findByWordSetIdOrderByRandom(setId)
+                .stream()
+                .map(entityDtoMapper::mapWordToDtoBasic)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .message("WordSet shuffled successfully")
+                .wordList(shuffledWordList)
                 .build();
     }
 

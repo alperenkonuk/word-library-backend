@@ -1,6 +1,8 @@
 package com.wordlibrary.controller;
 
-import com.wordlibrary.entity.User;
+import com.wordlibrary.dto.LoginRequest;
+import com.wordlibrary.dto.Response;
+import com.wordlibrary.dto.UserDto;
 import com.wordlibrary.service.implementations.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserServiceImpl userService;
 
+    @PostMapping("/register")
+    public ResponseEntity<Response> registerUser(@RequestBody UserDto registrationRequest) {
+        return ResponseEntity.ok(userService.registerUser(registrationRequest));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Response> loginRequest(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
+    }
 }

@@ -14,4 +14,6 @@ public interface UserService {
 
     Response getUserInfo();
 
+    Response getAllUsers();
+
 }
