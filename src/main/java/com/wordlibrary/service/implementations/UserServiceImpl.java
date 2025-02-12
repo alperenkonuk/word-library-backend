@@ -36,15 +36,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response registerUser(UserDto registrationRequest) {
+        Optional<User> existingUser = userRepository.findByEmail(registrationRequest.getEmail());
+
+        if(existingUser.isPresent()) {
+            return Response.builder()
+                    .status(400)
+                    .message("This email is already in use.")
+                    .build();
+        }
+
+        existingUser = userRepository.findByUsername(registrationRequest.getUsername());
+
+        if(existingUser.isPresent()) {
+            return Response.builder()
+                    .status(400)
+                    .message("This username is already in use.")
+                    .build();
+        }
+
         User user = User.builder()
                 .username(registrationRequest.getUsername())
                 .email(registrationRequest.getEmail())
                 .password(passwordEncoder.encode(registrationRequest.getPassword()))
-                .password(registrationRequest.getPassword())
+                .lastActiveDate(LocalDate.now())
                 .build();
 
         User savedUser = userRepository.save(user);
 
+        System.out.println("saved User: " + savedUser);
         UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
 
         return Response.builder()

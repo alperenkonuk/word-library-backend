@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -20,5 +21,6 @@ public class UserDto {
     private String username;
     private int streak;
     private String password;
+    private LocalDate lastActiveDate;
     private List<WordSetDto> wordSets;
 }
