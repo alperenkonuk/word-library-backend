@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> {
+    @Query(value = "SELECT * FROM words WHERE set_id = :set_id", nativeQuery = true)
     List<Word> findByWordSetId(Long setId);
 
     @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY RANDOM()", nativeQuery = true)
