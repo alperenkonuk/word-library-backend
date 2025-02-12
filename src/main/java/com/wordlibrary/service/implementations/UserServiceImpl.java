@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
         return Response.builder()
                 .status(200)
-                .message("User logged in succesfully")
+                .message("User logged in successfully")
                 .token(token)
                 .expirationTime("7 days")
                 .build();
