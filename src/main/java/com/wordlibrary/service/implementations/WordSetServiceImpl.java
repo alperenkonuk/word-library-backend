@@ -29,6 +29,7 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public Response addWordSet(WordSetDto wordSetDto) {
         User user = userService.getLoginUser();
+        System.out.println(user);
 
         WordSet wordSet = entityDtoMapper.mapDtoToWordSet(wordSetDto, user);
 

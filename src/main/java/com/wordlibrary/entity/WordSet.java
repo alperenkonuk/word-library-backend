@@ -29,7 +29,7 @@ public class WordSet {
     private Boolean isPublic;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
+    @Column()
     private Language language;
 
     @ManyToOne

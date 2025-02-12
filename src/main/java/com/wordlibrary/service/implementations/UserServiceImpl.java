@@ -54,10 +54,18 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
 
+        if(registrationRequest.getPassword().length() < 8) {
+            return Response.builder()
+                    .status(400)
+                    .message("Password must be at least 8 characters.")
+                    .build();
+        }
+
         User user = User.builder()
                 .username(registrationRequest.getUsername())
                 .email(registrationRequest.getEmail())
                 .password(passwordEncoder.encode(registrationRequest.getPassword()))
+                .streak(1)
                 .lastActiveDate(LocalDate.now())
                 .build();
 

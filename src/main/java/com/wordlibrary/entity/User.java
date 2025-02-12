@@ -36,8 +36,8 @@ public class User {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @Column(columnDefinition = "integer default 1")
-    private int streak;
+    @Column(nullable = false)
+    private int streak = 1;
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
