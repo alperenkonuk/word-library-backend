@@ -11,13 +11,12 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query(value = "SELECT * FROM users WHERE email = :email", nativeQuery = true)
+    @Query("SELECT u FROM User u WHERE u.email = :email")
     Optional<User> findByEmail(String email);
 
-    @Query(value = "SELECT * FROM users WHERE username = :username", nativeQuery = true)
+    @Query("SELECT u FROM User u WHERE u.username = :username")
     Optional<User> findByUsername(String username);
 
-    @Query(value = "SELECT lastActiveDate FROM users WHERE id = :id", nativeQuery = true)
+    @Query("SELECT u.lastActiveDate FROM User u WHERE u.id = :id")
     LocalDate getLastActiveDateByUserId(Long id);
-
 }

@@ -68,6 +68,9 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), loginUser.getPassword())) {
             throw new InvalidCredentialsException("Password doesn't match");
         }
+
+        updateStreak(loginUser);
+
         String token = jwtUtils.generateToken(loginUser);
 
         return Response.builder()
@@ -104,7 +107,7 @@ public class UserServiceImpl implements UserService {
     public void updateStreak(User user) {
         LocalDate today = LocalDate.now();
 
-        LocalDate lastActiveDate = userRepository.getLastActiveDateByUserId(user.getId());
+        LocalDate lastActiveDate = user.getLastActiveDate();
 
         if (lastActiveDate == null || !lastActiveDate.equals(today)) {
             LocalDate yesterday = today.minusDays(1);

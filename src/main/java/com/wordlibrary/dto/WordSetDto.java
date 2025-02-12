@@ -2,6 +2,7 @@ package com.wordlibrary.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.wordlibrary.entity.Language;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class WordSetDto {
     private long id;
     private String name;
     private Boolean isPublic;
-    private String language;
+    private Language language;
     private Long userId;
     private List<WordDto> words;
 
