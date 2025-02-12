@@ -1,21 +1,18 @@
 package com.wordlibrary.controller;
 
 import com.wordlibrary.dto.Response;
-import com.wordlibrary.entity.User;
-import com.wordlibrary.service.implementations.UserServiceImpl;
+import com.wordlibrary.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping("/get-all")
     @PreAuthorize("hasAuthority('ADMIN')")   //Right now there is no role feature in the application

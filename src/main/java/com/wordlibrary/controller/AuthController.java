@@ -3,7 +3,7 @@ package com.wordlibrary.controller;
 import com.wordlibrary.dto.LoginRequest;
 import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.UserDto;
-import com.wordlibrary.service.implementations.UserServiceImpl;
+import com.wordlibrary.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<Response> registerUser(@RequestBody UserDto registrationRequest) {
