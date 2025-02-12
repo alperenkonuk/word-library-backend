@@ -1,5 +1,8 @@
 package com.wordlibrary.security;
 
+import com.wordlibrary.entity.User;
+import com.wordlibrary.repository.UserRepository;
+import com.wordlibrary.service.interfaces.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +18,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -23,6 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,15 +40,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
-            if(StringUtils.hasText(username) && jwtUtils.isTokenValid(token, userDetails)) {
+            if (StringUtils.hasText(username) && jwtUtils.isTokenValid(token, userDetails)) {
                 log.info("VALID JWT FOR: {}", username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities()
-                );  
+                );
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+                Optional<User> user = userRepository.findByUsername(username);
+                user.ifPresent(value -> userService.updateStreak(value));
             }
         }
 

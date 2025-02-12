@@ -2,7 +2,6 @@ package com.wordlibrary.service.implementations;
 
 import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.WordDto;
-import com.wordlibrary.dto.WordSetDto;
 import com.wordlibrary.entity.Word;
 import com.wordlibrary.entity.WordSet;
 import com.wordlibrary.exception.NotFoundException;
