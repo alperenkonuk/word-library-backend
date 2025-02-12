@@ -44,4 +44,12 @@ public class WordSetController {
     public ResponseEntity<Response> getPublicWordSets() {
         return ResponseEntity.ok(wordSetService.getPublicWordSets());
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Response> filterWordSets(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String language
+    ) {
+        return ResponseEntity.ok(wordSetService.filterWordSets(name, language));
+    }
 }

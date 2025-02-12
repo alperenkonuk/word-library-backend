@@ -17,4 +17,8 @@ public interface WordSetService {
     Response getPublicWordSets();
 
     Response shuffleWords(Long id);
+
+    Response searchForSets(String name);
+
+    Response filterWordSets(String name, String language);
 }

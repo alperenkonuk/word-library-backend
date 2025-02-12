@@ -4,7 +4,6 @@ import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.WordDto;
 import com.wordlibrary.dto.WordSetDto;
 import com.wordlibrary.entity.User;
-import com.wordlibrary.entity.Word;
 import com.wordlibrary.entity.WordSet;
 import com.wordlibrary.exception.NotFoundException;
 import com.wordlibrary.mapper.EntityDtoMapper;
@@ -114,6 +113,8 @@ public class WordSetServiceImpl implements WordSetService {
                 .build();
     }
 
+
+
     @Override
     public Response shuffleWords(Long setId) {
         List<WordDto> shuffledWordList = wordRepository.findByWordSetIdOrderByRandom(setId)
@@ -125,6 +126,34 @@ public class WordSetServiceImpl implements WordSetService {
                 .status(200)
                 .message("WordSet shuffled successfully")
                 .wordList(shuffledWordList)
+                .build();
+    }
+
+    @Override
+    public Response searchForSets(String name) {
+        List<WordSetDto> wordSetDtoList = wordSetRepository.findWordSetByNameValue(name)
+                .stream()
+                .map(entityDtoMapper::mapWordSetToDtoBasic)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .message("WordSets transmitted successfully")
+                .wordSetList(wordSetDtoList)
+                .build();
+    }
+
+    @Override
+    public Response filterWordSets(String name, String language) {
+        List<WordSetDto> wordSetDtoList = wordSetRepository.filterWordSets(name, language)
+                .stream()
+                .map(entityDtoMapper::mapWordSetToDtoBasic)
+                .toList();
+
+        return Response.builder()
+                .status(200)
+                .message("Wordsets filtered successfully")
+                .wordSetList(wordSetDtoList)
                 .build();
     }
 
