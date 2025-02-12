@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,6 +98,26 @@ public class UserServiceImpl implements UserService {
                 .status(200)
                 .user(userDto)
                 .build();
+    }
+
+    @Override
+    public void updateStreak(User user) {
+        LocalDate today = LocalDate.now();
+
+        LocalDate lastActiveDate = userRepository.getLastActiveDateByUserId(user.getId());
+
+        if (lastActiveDate == null || !lastActiveDate.equals(today)) {
+            LocalDate yesterday = today.minusDays(1);
+
+            if (yesterday.equals(lastActiveDate)) {
+                user.setStreak(user.getStreak() + 1);
+            } else {
+                user.setStreak(0);
+            }
+
+            user.setLastActiveDate(today);
+            userRepository.save(user);
+        }
     }
 
     @Override

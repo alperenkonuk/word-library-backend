@@ -5,6 +5,8 @@ import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.UserDto;
 import com.wordlibrary.entity.User;
 
+import java.time.LocalDate;
+
 public interface UserService {
     Response registerUser(UserDto registrationRequest);
 
@@ -16,4 +18,5 @@ public interface UserService {
 
     Response getAllUsers();
 
+    void updateStreak(User user);
 }
