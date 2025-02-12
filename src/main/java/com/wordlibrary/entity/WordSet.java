@@ -28,8 +28,9 @@ public class WordSet {
     @Column
     private Boolean isPublic;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = true)
-    private String language;
+    private Language language;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
