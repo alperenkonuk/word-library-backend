@@ -35,7 +35,7 @@ public class WordSetController {
         return ResponseEntity.ok(wordSetService.deleteWordSet(set_id));
     }
 
-    @GetMapping("/user")
+    @GetMapping
     public ResponseEntity<Response> getUserWordSets() {
         return ResponseEntity.ok(wordSetService.getWordSetsByUser());
     }

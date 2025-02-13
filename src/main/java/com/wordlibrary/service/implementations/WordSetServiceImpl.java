@@ -29,7 +29,6 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public Response addWordSet(WordSetDto wordSetDto) {
         User user = userService.getLoginUser();
-        System.out.println(user);
 
         WordSet wordSet = entityDtoMapper.mapDtoToWordSet(wordSetDto, user);
 
@@ -58,10 +57,11 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public Response updateWordSet(WordSetDto wordSetDto) {
         WordSet wordSet = wordSetRepository.findById(wordSetDto.getId())
-                .orElseThrow(() -> new NotFoundException("Word not found"));
+                .orElseThrow(() -> new NotFoundException("WordSet not found"));
 
         if (wordSetDto.getName() != null) wordSet.setName(wordSetDto.getName());
         if (wordSetDto.getIsPublic() != null) wordSet.setIsPublic(wordSetDto.getIsPublic());
+        if (wordSetDto.getLanguage() != null) wordSet.setLanguage(wordSetDto.getLanguage());
 
         WordSet updatedWordSet = wordSetRepository.save(wordSet);
 
@@ -75,7 +75,7 @@ public class WordSetServiceImpl implements WordSetService {
     @Override
     public Response getWordSet(Long id) {
         WordSet wordSet = wordSetRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Word not found"));
+                .orElseThrow(() -> new NotFoundException("WordSet not found"));
 
         return Response.builder()
                 .status(200)
@@ -88,7 +88,7 @@ public class WordSetServiceImpl implements WordSetService {
     public Response getWordSetsByUser() {
         User user = userService.getLoginUser();
 
-        List<WordSetDto> wordSetDtoList = wordSetRepository.findByUserId(user.getId())
+        List<WordSetDto> wordSetDtoList = wordSetRepository.findByUser(user)
                 .stream()
                 .map(entityDtoMapper::mapWordSetToDtoBasic)
                 .toList();

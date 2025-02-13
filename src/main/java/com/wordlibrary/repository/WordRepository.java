@@ -10,15 +10,15 @@ import java.util.List;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long> {
-    @Query(value = "SELECT * FROM words WHERE set_id = :set_id", nativeQuery = true)
-    List<Word> findByWordSetId(Long setId);
+    @Query(value = "SELECT w FROM Word w WHERE w.wordSet.id = :set_id")
+    List<Word> findByWordSetId(@Param("set_id") Long set_id);
 
-    @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY RANDOM()", nativeQuery = true)
-    List<Word> findByWordSetIdOrderByRandom(@Param("setId") Long setId);
+    @Query(value = "SELECT w FROM Word w WHERE w.wordSet.id = :set_id ORDER BY RANDOM()")
+    List<Word> findByWordSetIdOrderByRandom(@Param("set_id") Long set_id);
 
-    @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY word ASC", nativeQuery = true)
-    List<Word> findByWordSetIdOrderAlphabeticalAsc(@Param("setId") Long setId);
+    @Query(value = "SELECT w FROM Word w WHERE w.wordSet.id = :set_id ORDER BY w.word ASC")
+    List<Word> findByWordSetIdOrderAlphabeticalAsc(@Param("set_id") Long set_id);
 
-    @Query(value = "SELECT * FROM words WHERE set_id = :setId ORDER BY word DESC", nativeQuery = true)
-    List<Word> findByWordSetIdOrderAlphabeticalDesc(@Param("setId") Long setId);
+    @Query(value = "SELECT w FROM Word w WHERE w.wordSet.id = :set_id ORDER BY w.word DESC")
+    List<Word> findByWordSetIdOrderAlphabeticalDesc(@Param("set_id") Long set_id);
 }
