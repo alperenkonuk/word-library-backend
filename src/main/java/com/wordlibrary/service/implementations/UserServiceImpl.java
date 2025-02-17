@@ -70,13 +70,14 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
+        String token = jwtUtils.generateToken(savedUser);
 
-        System.out.println("saved User: " + savedUser);
         UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
 
         return Response.builder()
                 .status(200)
-                .message("User added succesfully")
+                .message("User registered successfully")
+                .token(token)
                 .user(userDto)
                 .build();
 
