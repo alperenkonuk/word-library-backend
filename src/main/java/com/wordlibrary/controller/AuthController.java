@@ -1,6 +1,7 @@
 package com.wordlibrary.controller;
 
 import com.wordlibrary.dto.LoginRequest;
+import com.wordlibrary.dto.RefreshRequest;
 import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.UserDto;
 import com.wordlibrary.service.interfaces.UserService;
@@ -26,5 +27,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Response> loginRequest(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(userService.loginUser(loginRequest));
+    }
+
+    @PostMapping("/generateToken")
+    public ResponseEntity<Response> generateAccessToken(@RequestBody RefreshRequest refreshRequest) {
+        return ResponseEntity.ok(userService.refreshToken(refreshRequest));
+
     }
 }

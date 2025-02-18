@@ -2,6 +2,7 @@ package com.wordlibrary.service.implementations;
 
 
 import com.wordlibrary.dto.LoginRequest;
+import com.wordlibrary.dto.RefreshRequest;
 import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.UserDto;
 import com.wordlibrary.entity.User;
@@ -11,12 +12,14 @@ import com.wordlibrary.mapper.EntityDtoMapper;
 import com.wordlibrary.repository.UserRepository;
 import com.wordlibrary.security.JwtUtils;
 import com.wordlibrary.service.interfaces.UserService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,7 +53,7 @@ public class UserServiceImpl implements UserService {
         if(existingUser.isPresent()) {
             return Response.builder()
                     .status(400)
-                    .message("This username is already in use.")
+                    .message("This username is already taken.")
                     .build();
         }
 
@@ -70,14 +73,15 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
-        String token = jwtUtils.generateToken(savedUser);
+        String accessToken = jwtUtils.generateAccessToken(savedUser);
+        String refreshToken = jwtUtils.generateRefreshToken(savedUser);
 
         UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
 
         return Response.builder()
                 .status(200)
-                .message("User registered successfully")
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .user(userDto)
                 .build();
 
@@ -94,17 +98,21 @@ public class UserServiceImpl implements UserService {
         User loginUser = user.get();
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), loginUser.getPassword())) {
-            throw new InvalidCredentialsException("Password doesn't match");
+            throw new InvalidCredentialsException("Password is wrong");
         }
 
         updateStreak(loginUser);
 
-        String token = jwtUtils.generateToken(loginUser);
+        String accessToken = jwtUtils.generateAccessToken(loginUser);
+        String refreshToken = jwtUtils.generateRefreshToken(loginUser);
+        UserDto userDto = entityDtoMapper.mapUserToDtoBasic(loginUser);
+
 
         return Response.builder()
                 .status(200)
-                .message("User logged in successfully")
-                .token(token)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .user(userDto)
                 .expirationTime("7 days")
                 .build();
 
@@ -128,6 +136,17 @@ public class UserServiceImpl implements UserService {
         return Response.builder()
                 .status(200)
                 .user(userDto)
+                .build();
+    }
+
+    @Override
+    public Response refreshToken(RefreshRequest request) {
+        Claims claims = jwtUtils.extractClaims(request.getToken());
+        String refreshToken = jwtUtils.generateRefreshToken(claims.getSubject());
+
+        return Response.builder()
+                .status(200)
+                .refreshToken(refreshToken)
                 .build();
     }
 

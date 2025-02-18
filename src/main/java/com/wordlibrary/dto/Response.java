@@ -16,7 +16,8 @@ public class Response {
     private String message;
     private final LocalDateTime timestamp = LocalDateTime.now();
 
-    private String token;
+    private String accessToken;
+    private String refreshToken;
     private String expirationTime;
 
     private UserDto user;

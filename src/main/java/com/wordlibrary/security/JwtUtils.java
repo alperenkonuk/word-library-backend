@@ -20,7 +20,8 @@ import java.util.function.Function;
 @Slf4j
 public class JwtUtils {
 
-    private static final long EXPIRATION_TIME = 1000L * 60L * 60L * 24L * 7L; // 7days in milliseconds
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000L * 60L * 10L; // 10 mins
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000L * 60L * 60L * 24L * 7L; // 7days in milliseconds
     private SecretKey key;
 
     @Value("${secretJwtKey}")
@@ -32,16 +33,30 @@ public class JwtUtils {
         this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         String username = user.getEmail();
-        return generateToken(username);
+        return generateAccessToken(username);
     }
 
-    public String generateToken(String username) {
+    public String generateAccessToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(key)
+                .compact();
+    }
+
+    public String generateRefreshToken(User user) {
+        String username = user.getEmail();
+        return generateRefreshToken(username);
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
                 .signWith(key)
                 .compact();
     }
@@ -50,13 +65,22 @@ public class JwtUtils {
         return extractClaims(token, Claims::getSubject);
     }
 
-    private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
+    public <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
         return claimsTFunction.apply(Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody());
     }
+
+    public Claims extractClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
