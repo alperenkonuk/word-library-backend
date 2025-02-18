@@ -19,5 +19,5 @@ public interface UserService {
 
     void updateStreak(User user);
 
-    Response refreshToken(RefreshRequest refreshRequest);
+    Response refreshToken(String authToken);
 }

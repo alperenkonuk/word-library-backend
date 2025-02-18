@@ -2,7 +2,6 @@ package com.wordlibrary.service.implementations;
 
 
 import com.wordlibrary.dto.LoginRequest;
-import com.wordlibrary.dto.RefreshRequest;
 import com.wordlibrary.dto.Response;
 import com.wordlibrary.dto.UserDto;
 import com.wordlibrary.entity.User;
@@ -12,14 +11,12 @@ import com.wordlibrary.mapper.EntityDtoMapper;
 import com.wordlibrary.repository.UserRepository;
 import com.wordlibrary.security.JwtUtils;
 import com.wordlibrary.service.interfaces.UserService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public Response registerUser(UserDto registrationRequest) {
         Optional<User> existingUser = userRepository.findByEmail(registrationRequest.getEmail());
 
-        if(existingUser.isPresent()) {
+        if (existingUser.isPresent()) {
             return Response.builder()
                     .status(400)
                     .message("This email is already in use.")
@@ -50,14 +47,14 @@ public class UserServiceImpl implements UserService {
 
         existingUser = userRepository.findByUsername(registrationRequest.getUsername());
 
-        if(existingUser.isPresent()) {
+        if (existingUser.isPresent()) {
             return Response.builder()
                     .status(400)
                     .message("This username is already taken.")
                     .build();
         }
 
-        if(registrationRequest.getPassword().length() < 8) {
+        if (registrationRequest.getPassword().length() < 8) {
             return Response.builder()
                     .status(400)
                     .message("Password must be at least 8 characters.")
@@ -140,13 +137,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response refreshToken(RefreshRequest request) {
-        Claims claims = jwtUtils.extractClaims(request.getToken());
-        String refreshToken = jwtUtils.generateRefreshToken(claims.getSubject());
+    public Response refreshToken(String authToken) {
+        String email = jwtUtils.getUsernameFromToken(authToken);
+        String accessToken = jwtUtils.generateAccessToken(email);
 
         return Response.builder()
                 .status(200)
-                .refreshToken(refreshToken)
+                .accessToken(accessToken)
                 .build();
     }
 
